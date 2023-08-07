@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import tdtu.edu.vn.Lab10.models.CartManagement;
 import tdtu.edu.vn.Lab10.models.Product;
 import tdtu.edu.vn.Lab10.services.CartManagementService;
@@ -48,17 +45,35 @@ public class ProductController {
             model.addAttribute("listProduct", productList);
 
         } else if(brands.isEmpty()){
+            if(minPrice < 0 || maxPrice < 0){
+                minPrice = 0;
+                maxPrice = 77777777;
+            }
             List<Product> productList = productService.getProductsByPriceRange(minPrice, maxPrice);
+            model.addAttribute("minPrice", minPrice);
+            model.addAttribute("maxPrice", maxPrice);
             model.addAttribute("listProduct", productList);
         }
         else{
+            if(minPrice < 0 || maxPrice < 0){
+                minPrice = 0;
+                maxPrice = 77777777;
+            }
             List<Product> productList = productService.getProductsByBrandsAndPriceRange(brands,minPrice, maxPrice);
             model.addAttribute("brandsChecked", brands);
+            model.addAttribute("minPrice", minPrice);
+            model.addAttribute("maxPrice", maxPrice);
             model.addAttribute("listProduct", productList);
         }
         return "index";
     }
-
+    @GetMapping("/filter")
+    public String getProductsByName(@RequestParam("productName") String productName, Model model){
+        List<Product> productList = productService.getProductsByName(productName);
+        model.addAttribute("productNameSearched", productName);
+        model.addAttribute("listProduct", productList);
+        return "index";
+    }
 //    @GetMapping("/cart")
 //    public String cartPage(){
 ////        Product product  = productService.getProduct(productId);

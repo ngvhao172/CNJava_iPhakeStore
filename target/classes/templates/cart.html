@@ -25,7 +25,7 @@
                 <hr>
                 <div class="row" th:each="productOnCart,index: ${listProductOnCart}">
                     <div class="d-flex justify-content-center col-4">
-                        <img th:src="${productOnCart.image}" class="img-fluid">
+                        <img th:src="${productOnCart.image}" class="img-fluid" style="max-width: 120px">
                     </div>
                     <div class="col-6">
                         <div class="row">
@@ -42,8 +42,9 @@
                                 <p class="text-danger fw-bold"  th:text="${#strings.replace(#strings.replace(#numbers.formatDecimal(productOnCart.price, 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + đ"></p>
                             </div>
                             <div class="col" th:with="cart =${cartManagementList}">
-                                <p class="d-inline">SL:</p>
-                                <p class="d-inline fw-bold" th:text="${cart[__${index.index}__].getSoLuong}"></p>
+                                <div class="rounded" style="width: max-content; background-color: #f7f7f7;"><a th:href="@{'cart/minus/'+ ${productOnCart.getId()}}" class="text-decoration-none text-dark"><i class="bi bi-dash ps-2 pe-2"></i></a><p class="d-inline fw-bold" th:text="${cart[__${index.index}__].getSoLuong}"></p><a th:href="@{'cart/add/'+ ${productOnCart.getId()}}" class="text-decoration-none text-dark"><i class="bi bi-plus ps-2 pe-2"></i></a></div>
+<!--                                <p class="d-inline">SL:</p>-->
+
                             </div>
                         </div>
                         <div class="row">
@@ -52,7 +53,7 @@
                                 <p class="d-inline">
                                     Tổng tiền:
                                 </p>
-                                <p class="text-danger fw-bold d-inline" th:text="${#strings.replace(#strings.replace(#numbers.formatDecimal(cart[__${index.index}__].getTongTien(), 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + đ"></p>
+                                <p class="text-danger fw-bold d-inline" th:text="${#strings.replace(#strings.replace(#numbers.formatDecimal(cart[__${index.index}__].getTongTien(), 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + 'đ'"></p>
                             </div>
                         </div>
                     </div>
@@ -67,7 +68,7 @@
                         <p class="fw-bold">Tổng tiền tạm tính:</p>
                     </div>
                     <div class="col">
-                        <p class="text-end text-danger fw-bold" th:text="${#strings.replace(#strings.replace(#numbers.formatDecimal(totalBill, 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + đ"></p>
+                        <p class="text-end text-danger fw-bold" th:text="${totalBill}? ${#strings.replace(#strings.replace(#numbers.formatDecimal(totalBill, 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + 'đ' : '0đ'"></p>
                     </div>
                 </div>
 <!--                <form method="post" th:action="@{/order}">-->

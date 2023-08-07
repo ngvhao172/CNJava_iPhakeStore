@@ -30,4 +30,7 @@ public class ProductService {
     public List<Product> getProductsByPriceRange(double minPrice, double maxPrice) {
         return productRepository.findProductsByPriceBetween(minPrice, maxPrice);
     }
+    public List<Product> getProductsByName(String name){
+        return productRepository.findProductsByNameContainingIgnoreCase(name);
+    }
 }

@@ -63,6 +63,7 @@ public class CartManagementController {
             return "cart";
         }
         return "/login";
+//        return "cart";
     }
     @GetMapping("/cart")
     public String getAllCart(Model model){
@@ -100,6 +101,73 @@ public class CartManagementController {
         model.addAttribute("listProductOnCart", productList);
         model.addAttribute("cartManagementList", cartManagementList);
         model.addAttribute("totalBill", total);
+        return "redirect:/cart";
+    }
+    @GetMapping("cart/minus/{id}")
+    public String reducingProductOnCart(@PathVariable("id") Long productId, Model model){
+        double total = 00.;
+        if (httpSession.getAttribute("account") != null) {
+            Account account = (Account) httpSession.getAttribute("account");
+
+            // Check if the item is already in the cart
+            CartManagement cart = cartManagementService.findBySanPhamIdAndUserAccount(productId, account);
+            Product productInfor = productService.getProductById((productId));
+            if (cart != null) {
+                if(cart.getSoLuong()>1) {
+                    cart.setSoLuong(cart.getSoLuong() - 1);
+                    cart.setTongTien(cart.getTongTien() - productInfor.getPrice());
+                    cartManagementService.save(cart);
+                }
+                else{
+                    model.addAttribute("notiMinQuantity",true);
+                }
+            } else {
+                int soLuong = 1;
+                cartManagementService.save(new CartManagement(productId, soLuong, productInfor.getPrice(), account));
+            }
+
+            List<CartManagement> cartManagementList = cartManagementService.getAllCartManagementByUserAccount(account.getUsername());
+            List<Product> productList = new ArrayList<>();
+            for (CartManagement cartManagement : cartManagementList) {
+                Product product = productService.getProductById(cartManagement.getSanPhamId());
+                productList.add(product);
+                total += cartManagement.getTongTien();
+            }
+            model.addAttribute("listProductOnCart", productList);
+            model.addAttribute("cartManagementList", cartManagementList);
+            model.addAttribute("totalBill", total);
+        }
+        return "redirect:/cart";
+    }
+    @GetMapping("cart/add/{id}")
+    public String increasingProductOnCart(@PathVariable("id") Long productId, Model model){
+        double total = 00.;
+        if (httpSession.getAttribute("account") != null) {
+            Account account = (Account) httpSession.getAttribute("account");
+
+            // Check if the item is already in the cart
+            CartManagement cart = cartManagementService.findBySanPhamIdAndUserAccount(productId, account);
+            Product productInfor = productService.getProductById((productId));
+            if (cart != null) {
+                cart.setSoLuong(cart.getSoLuong() + 1);
+                cart.setTongTien(cart.getTongTien() + productInfor.getPrice());
+                cartManagementService.save(cart);
+            } else {
+                int soLuong = 1;
+                cartManagementService.save(new CartManagement(productId, soLuong, productInfor.getPrice(), account));
+            }
+
+            List<CartManagement> cartManagementList = cartManagementService.getAllCartManagementByUserAccount(account.getUsername());
+            List<Product> productList = new ArrayList<>();
+            for (CartManagement cartManagement : cartManagementList) {
+                Product product = productService.getProductById(cartManagement.getSanPhamId());
+                productList.add(product);
+                total += cartManagement.getTongTien();
+            }
+            model.addAttribute("listProductOnCart", productList);
+            model.addAttribute("cartManagementList", cartManagementList);
+            model.addAttribute("totalBill", total);
+        }
         return "redirect:/cart";
     }
 }

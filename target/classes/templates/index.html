@@ -58,7 +58,17 @@
                 </form>
             </div>
             <div class="col-9">
+                <!-- Lọc theo giá -->
                 <div class="row">
+                    <p class="fw-bold" th:if="${minPrice != null && minPrice > 0}" th:text="'Giá từ ' +
+                    ${#strings.replace(#strings.replace(#numbers.formatDecimal(minPrice, 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} +  'đ - ' +
+                    ${#strings.replace(#strings.replace(#numbers.formatDecimal(maxPrice, 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + 'đ : '"></p>
+                    <p class="fw-bold" th:if="${minPrice != null && minPrice == 0}" th:text="'Giá từ 0đ - ' + ${#strings.replace(#strings.replace(#numbers.formatDecimal(maxPrice, 0, 'COMMA', 2, 'POINT'), '.00', ''), ',', '.')} + 'đ : '"></p>
+                </div>
+                <div class="row">
+                    <th:block th:if="${listProduct.isEmpty()}">
+                        <p class="fw-bold">Danh sách sản phẩm trống.</p>
+                    </th:block>
                     <div class="col-6 col-sm-4 col-lg-3 mt-2" th:each="product: ${listProduct}">
                         <div class="card h-100" style="height: auto; max-width: 250px">
                             <div class="pro-image m-3">
