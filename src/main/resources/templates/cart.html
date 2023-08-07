@@ -25,7 +25,7 @@
                 <hr>
                 <div class="row" th:each="productOnCart,index: ${listProductOnCart}">
                     <div class="d-flex justify-content-center col-4">
-                        <img th:src="${productOnCart.image}" class="img-fluid">
+                        <img th:src="${productOnCart.image}" class="img-fluid" style="max-width: 120px">
                     </div>
                     <div class="col-6">
                         <div class="row">
