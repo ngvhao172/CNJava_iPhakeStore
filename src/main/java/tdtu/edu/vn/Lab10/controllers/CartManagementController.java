@@ -112,20 +112,14 @@ public class CartManagementController {
             // Check if the item is already in the cart
             CartManagement cart = cartManagementService.findBySanPhamIdAndUserAccount(productId, account);
             Product productInfor = productService.getProductById((productId));
-            if (cart != null) {
-                if(cart.getSoLuong()>1) {
-                    cart.setSoLuong(cart.getSoLuong() - 1);
-                    cart.setTongTien(cart.getTongTien() - productInfor.getPrice());
-                    cartManagementService.save(cart);
-                }
-                else{
-                    model.addAttribute("notiMinQuantity",true);
-                }
-            } else {
-                int soLuong = 1;
-                cartManagementService.save(new CartManagement(productId, soLuong, productInfor.getPrice(), account));
+            if(cart.getSoLuong()>1) {
+                cart.setSoLuong(cart.getSoLuong() - 1);
+                cart.setTongTien(cart.getTongTien() - productInfor.getPrice());
+                cartManagementService.save(cart);
             }
-
+            else if(cart.getSoLuong()==1){
+                model.addAttribute("minQuantity",true);
+            }
             List<CartManagement> cartManagementList = cartManagementService.getAllCartManagementByUserAccount(account.getUsername());
             List<Product> productList = new ArrayList<>();
             for (CartManagement cartManagement : cartManagementList) {
