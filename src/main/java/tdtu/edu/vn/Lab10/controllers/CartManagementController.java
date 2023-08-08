@@ -8,11 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import tdtu.edu.vn.Lab10.models.Account;
 import tdtu.edu.vn.Lab10.models.CartManagement;
 import tdtu.edu.vn.Lab10.models.Product;
-import tdtu.edu.vn.Lab10.services.AccountService;
 import tdtu.edu.vn.Lab10.services.CartManagementService;
 import tdtu.edu.vn.Lab10.services.ProductService;
 
@@ -116,9 +114,6 @@ public class CartManagementController {
                 cart.setSoLuong(cart.getSoLuong() - 1);
                 cart.setTongTien(cart.getTongTien() - productInfor.getPrice());
                 cartManagementService.save(cart);
-            }
-            else if(cart.getSoLuong()==1){
-                model.addAttribute("minQuantity",true);
             }
             List<CartManagement> cartManagementList = cartManagementService.getAllCartManagementByUserAccount(account.getUsername());
             List<Product> productList = new ArrayList<>();
